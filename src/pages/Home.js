@@ -1,17 +1,24 @@
-import { useState } from "react";
-import { connect } from "react-redux";
+import { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ToDo from "../components/ToDo";
-import { actionCreators } from "../redux/store";
+import { addToDo } from "../redux/store";
 
-const Home = ({ toDos, addToDo }) => {
+const Home = () => {
   const [text, setText] = useState("");
+  const toDos = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const dispatchAddToDo = useCallback(
+    (text) => dispatch(addToDo(text)),
+    [dispatch]
+  );
+
   const onChange = (event) => {
     setText(event.target.value);
   };
 
   const onSubmit = (event) => {
     event.preventDefault();
-    addToDo(text);
+    dispatchAddToDo(text);
     setText("");
   };
 
@@ -31,12 +38,4 @@ const Home = ({ toDos, addToDo }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return { toDos: state };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return { addToDo: (text) => dispatch(actionCreators.addToDo(text)) };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

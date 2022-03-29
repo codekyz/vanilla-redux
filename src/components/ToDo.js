@@ -1,20 +1,23 @@
-import { connect } from "react-redux";
+import { useCallback } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { actionCreators } from "../redux/store";
+import { deleteToDo } from "../redux/store";
 
-const ToDo = ({ text, id, onBtnClick }) => {
+const ToDo = ({ text, id }) => {
+  const dispatch = useDispatch();
+  const dispatchDeleteToDo = useCallback(
+    (id) => dispatch(deleteToDo(id)),
+    [dispatch]
+  );
+  const onBtnClick = () => {
+    dispatchDeleteToDo(id);
+  };
   return (
     <li>
-      <Link to={`/${id}`}>{text} </Link>
+      <Link to={`/${id}`}>{text}</Link>
       <button onClick={onBtnClick}>DEL</button>
     </li>
   );
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    onBtnClick: () => dispatch(actionCreators.deleteToDo(ownProps.id)),
-  };
-};
-
-export default connect(null, mapDispatchToProps)(ToDo);
+export default ToDo;
