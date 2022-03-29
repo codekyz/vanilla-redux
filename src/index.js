@@ -1,10 +1,30 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import { createStore } from "redux";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+const plus = document.getElementById("plus");
+const minus = document.getElementById("minus");
+const number = document.querySelector("span");
+
+const PLUS = "PLUS";
+const MINUS = "MINUS";
+
+const countModifier = (count = 0, action) => {
+  switch (action.type) {
+    case PLUS:
+      return count + 1;
+    case MINUS:
+      return count - 1;
+    default:
+      return count;
+  }
+};
+
+const countStore = createStore(countModifier);
+
+const onChange = () => {
+  number.innerText = countStore.getState();
+};
+
+countStore.subscribe(onChange);
+
+plus.addEventListener("click", () => countStore.dispatch({ type: PLUS }));
+minus.addEventListener("click", () => countStore.dispatch({ type: MINUS }));
